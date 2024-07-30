@@ -39,7 +39,17 @@ javac client3.java
 java client3  
 ```
 
-### 前端查詢介面
-打開瀏覽器輸入`localhost:5000`可看到查詢log的輸入欄位。透過輸入關鍵字進行搜尋，如下圖。若未輸入任何欄位就按下Search，則會返回所有logs.  
-![螢幕擷取畫面 2024-07-29 114615](https://github.com/user-attachments/assets/70c13560-8b23-429d-a2a7-717c0359784d)
-
+### 查詢介面
+### 建置
+進入`express-app`資料夾，建立一個`.env`檔，自行輸入以下資訊以連結至自己的資料庫。
+```
+DB_USER=username
+DB_PASSWORD=yourpassword
+DB_HOST=localhost
+DB_DATABASE=yourdb
+```
+接著開啟terminal輸入`node app.js`開始使用查詢功能。  
+### 瀏覽
+打開瀏覽器輸入`localhost:3000`可看到查詢log的網頁。透過輸入關鍵字進行搜尋，如下圖。若未輸入任何欄位就按下Search，則會返回所有logs.  
+![前端介面](/images/Screenshot%202024-07-30%20171210.png)
+搜尋結果可以透過Download按鈕下載為CSV檔案。
