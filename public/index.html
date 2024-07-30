@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Query UI</title>
+</head>
+<body>
+    <h1>Log Query UI</h1>
+    <form id="searchForm">
+        <label for="host_name">Host Name:</label>
+        <input type="text" id="host_name" name="host_name"><br><br>
+
+        <label for="host_ip">Host IP:</label>
+        <input type="text" id="host_ip" name="host_ip"><br><br>
+
+        <label for="system_type">System Type:</label>
+        <input type="text" id="system_type" name="system_type"><br><br>
+
+        <label for="level">Log Level:</label>
+        <input type="text" id="level" name="level"><br><br>
+
+        <label for="log_time">Log Time:</label>
+        <input type="date" id="log_time" name="log_time"><br><br>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Results:</h2>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const host_name = document.getElementById('host_name').value;
+            const host_ip = document.getElementById('host_ip').value;
+            const system_type = document.getElementById('system_type').value;
+            const level = document.getElementById('level').value;
+            const log_time = document.getElementById('log_time').value;
+
+            const queryParams = new URLSearchParams({ host_name, host_ip, system_type, level, log_time });
+
+            fetch(`/search?${queryParams.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '<ul>' + data.map(log => `
+                        <li>
+                            <strong>ID:</strong> ${log.ID}<br>
+                            <strong>Host Name:</strong> ${log.HOST_NAME}<br>
+                            <strong>Host IP:</strong> ${log.HOST_IP}<br>
+                            <strong>System Type:</strong> ${log.SYSTEM_TYPE}<br>
+                            <strong>Level:</strong> ${log.LEVEL}<br>
+                            <strong>Process Name:</strong> ${log.PROCESS_NAME}<br>
+                            <strong>Content:</strong> ${log.CONTENT}<br>
+                            <strong>Log Time:</strong> ${log.LOG_TIME}<br>
+                            <strong>Timestamp:</strong> ${log.TIMESTAMP}
+                        </li>
+                    `).join('') + '</ul>';
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
+
