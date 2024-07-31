@@ -1,2 +1,9 @@
+# connect to db
 db_config.txt
-vscode/
+express-app/.env
+
+# dependencies
+express-app/node_modules/
+
+/vscode
+
