@@ -48,7 +48,7 @@ DB_PASSWORD=yourpassword
 DB_HOST=localhost
 DB_DATABASE=yourdb
 ```
-接著開啟terminal輸入`node app.js`開始使用查詢功能。  
+接著開啟terminal輸入`node app.js`開始使用查詢功能。（在此之前請安裝node及指定套件）  
 ### 瀏覽
 打開瀏覽器輸入`localhost:3000`可看到查詢log的網頁。透過輸入關鍵字進行搜尋，如下圖。若未輸入任何欄位就按下Search，則會返回所有logs.  
 ![前端介面](/images/Screenshot%202024-07-30%20171210.png)
