@@ -12,7 +12,7 @@ password=yourpassword
 host=localhost  
 database=yourdb  
 ```
-在自行指定的 MySQL Database 內建立 table，並將此 table 命名為 `log_data`.
+透過`create_table.md`內的指令在自行指定的 MySQL Database 內建立資料庫及 table，並將此 table 命名為 `log_data`.
 
 #### Server
 執行
@@ -59,5 +59,6 @@ DB_DATABASE=yourdb
 接著開啟terminal輸入`node app.js`開始使用查詢功能。（在此之前請安裝node及相關套件）  
 ### 瀏覽
 打開瀏覽器輸入`localhost:3000`可看到查詢 log 的網頁 UI。透過輸入關鍵字進行搜尋（可複合查詢），如下圖。若未輸入任何欄位就按下Search，則會返回所有logs. 點擊 `Dark Mode` 可以切換為夜間模式，搜尋結果可以透過`Download Search Result`按鈕下載為 .CSV 檔案。    
+
 ![前端介面](/images/Screenshot%202024-07-30%20171210.png)
 

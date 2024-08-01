@@ -5,5 +5,5 @@ express-app/.env
 # dependencies
 express-app/node_modules/
 
-/vscode
+/.vscode
 
