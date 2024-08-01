@@ -49,6 +49,11 @@ java client3
 
 ### 查詢 log 的功能及 UI
 ### 系統建置
+#### 安裝依賴項
+進入`express-app`資料夾，在terminal輸入`npm install`安裝所需套件。  
+`npm start`啟動專案。  
+
+#### 連結資料庫
 進入`express-app`資料夾，新增一個`.env`檔，自行輸入以下資訊以連結至自己的資料庫。
 ```
 DB_USER=username
