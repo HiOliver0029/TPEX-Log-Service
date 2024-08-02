@@ -1,0 +1,7 @@
+08:32:08  WARN|tcp.c   : 268 on_connection  # New Connection Established
+08:32:08 DEBUG|tcp.c   : 134 on_read        # on_read (nread=54)
+08:32:08 DEBUG|tcp.c   : 148 on_read        # Expected packet size = 50	buffer left = 54
+08:32:08  INFO|tcp.c   : 181 on_read        # Received RETR: start serving
+08:32:08 DEBUG|file.c  : 418 start_serve_fi # shared it! ref_count=1
+08:32:08  INFO|file.c  : 439 start_serve_fi # raw offset = 
+08:32:08  WARN|file.c  : 455 start_serve_fi # uv_fs_open() [D:\My Programs\Log\NOrder_C.dat.513] = no such file or directory
