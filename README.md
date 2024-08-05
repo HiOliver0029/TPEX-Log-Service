@@ -67,3 +67,6 @@ DB_DATABASE=yourdb
 
 ![前端介面](/images/Screenshot%202024-07-30%20171210.png)
 
+### Data Preprocessor
+#### 相關檔案
+進入`write-to-db`資料夾並開啟`log_server.py`後，可執行`script.py`來處理`rtfServer`的log檔案，將會記錄目前已寫入到第幾行log(透過offset.txt)，並將資料藉由`log_server.py` POST到資料庫。

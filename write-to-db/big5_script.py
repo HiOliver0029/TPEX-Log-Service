@@ -14,9 +14,9 @@ def get_system_type(config_file):
     return "Unknown"
 
 # 設定檔案路徑及已讀取的行數記錄
-# log_file_path = 'rtfServer.log'
-log_file_path = 'test.log'
-offset_file = 'offset.txt'
+# log_file_path = 'big5_test.txt'
+log_file_path = 'SystemLog.20240403'
+offset_file = 'big5_offset.txt'
 config_file = 'config.cfg'
 
 # 取得系統類型
@@ -43,19 +43,8 @@ def get_ip():
 ipaddress = get_ip()
 # print(ipaddress)
 
-def get_process(file_path):
-    # Split the path by "."
-    parts = log_file_path.split(".")
-
-    # Extract the process name (assuming the first part is the process name)
-    if len(parts) > 0:
-        process_name = parts[0]
-    else:
-        process_name = "unknown"  # Handle cases where there's no "." in the path
-    return process_name
-
-process_name = get_process(log_file_path)
-print(process_name)
+# 設定其他固定資訊
+process_name = "SampleProcess"
 
 # 讀取已讀取的行數
 if not os.path.exists(offset_file):
@@ -64,10 +53,11 @@ if not os.path.exists(offset_file):
 
 with open(offset_file, 'r') as f:
     offset = int(f.read().strip())
+# print(offset)
 
 # 讀取新內容
 new_content = []
-with open(log_file_path, 'r') as f:
+with open(log_file_path, 'r', encoding='big5', errors='ignore') as f:
     lines = f.readlines()
     new_content = lines[offset:]
     new_offset = len(lines)
@@ -79,21 +69,10 @@ with open(offset_file, 'w') as f:
 def extract_level(line):
   """從一行日志中提取 level。"""
   # 從右邊開始找到 '|' 的索引
-  pipe_index = line.rfind('|')
-  # 從 '|' 的索引往前找到空格的索引
-  space_index = line[:pipe_index].rfind(' ')
+  pipe_index = line.rfind('-')
   # 取出空格到 '|' 之間的字串
-  level = line[space_index+1:pipe_index]
+  level = line[pipe_index+2:pipe_index+6]
   return level
-
-def extract_time(line):
-    time = line[:8]
-    return time 
-
-def extract_message(line):
-    index = line.rfind('#')
-    message = line[index+2:]
-    return message
 
 # 處理每一行新的Log內容
 for line in new_content:
@@ -101,15 +80,8 @@ for line in new_content:
     # print(level)
 
     # 取得目前時間並格式化成 ISO 8601 格式
-    date = datetime.now().strftime("%Y-%m-%d")
-    time = extract_time(line)
-    log_time = f"{date} {time}"
-    print(log_time)
+    log_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    raw_message = line.strip()
-    content = extract_message(raw_message) 
-    print(content)
-    
     # 組合 JSON 資料
     log_data = {
         "HOST_NAME": hostname.node,
@@ -117,13 +89,13 @@ for line in new_content:
         "SYSTEM_TYPE": system_type,
         "LEVEL": level,
         "PROCESS_NAME": process_name,
-        "CONTENT": content,
+        "CONTENT": line.strip(),
         "LOG_TIME": log_time
     }
 
     # 將 JSON 寫入檔案
-    with open('log.json', 'a') as f:
-        json.dump(log_data, f)
+    with open('big5_log.json', 'a', encoding='utf-8') as f:
+        json.dump(log_data, f, ensure_ascii=False)
         f.write('\n')
 
     # 使用 requests 發送 POST 請求

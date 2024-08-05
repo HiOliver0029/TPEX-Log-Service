@@ -1,5 +1,5 @@
 # connect to db
-db_config.txt
+write-to-db/db_config.txt
 express-app/.env
 
 # dependencies
@@ -7,3 +7,9 @@ express-app/node_modules/
 
 .vscode/
 
+# Not needed
+write-to-db/not_used/
+write-to-db/log.json
+write-to-db/big5_log.json
+write-to-db/offset.txt
+write-to-db/big5_offset.txt

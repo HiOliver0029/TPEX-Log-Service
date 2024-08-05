@@ -1,3 +1,11 @@
+07:32:58  INFO|tcp.c   : 306 tcp_serve      # uv_ipv4_addr(0.0.0.0, 5565, sockaddr_in) = OK
+07:32:58  INFO|tcp.c   : 313 tcp_serve      # uv_tcp_bind(sockaddr, (0.0.0.0, 5565)) = OK
+07:32:58  INFO|tcp.c   : 320 tcp_serve      # uv_listen() = OK
+07:32:58  WARN|server.c:  53 server_run     # uv_run()
+08:32:07  WARN|tcp.c   : 268 on_connection  # New Connection Established
+08:32:07  WARN|tcp.c   : 268 on_connection  # New Connection Established
+08:32:07  WARN|tcp.c   : 268 on_connection  # New Connection Established
+08:32:07  WARN|tcp.c   : 268 on_connection  # New Connection Established
 08:32:08  WARN|tcp.c   : 268 on_connection  # New Connection Established
 08:32:08 DEBUG|tcp.c   : 134 on_read        # on_read (nread=54)
 08:32:08 DEBUG|tcp.c   : 148 on_read        # Expected packet size = 50	buffer left = 54
