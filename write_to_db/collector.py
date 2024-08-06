@@ -14,22 +14,22 @@ app = Flask(__name__)
 host_info = {}
 split_rule = {}
 
-@app.route('/host_info', methods=['POST'])
-def receive_host_info():
-    global host_info
-    host_info = request.json
-    return jsonify({"message": "Host information received"}), 200
+# @app.route('/host_info', methods=['POST'])
+# def receive_host_info():
+#     global host_info
+#     host_info = request.json
+#     return jsonify({"message": "Host information received"}), 200
 
-@app.route('/split_rule', methods=['POST'])
-def receive_split_rule():
-    global split_rule
-    split_rule = request.json
-    return jsonify({"message": "Split rule received"}), 200
+# @app.route('/split_rule', methods=['POST'])
+# def receive_split_rule():
+#     global split_rule
+#     split_rule = request.json
+#     return jsonify({"message": "Split rule received"}), 200
 
-@app.route('/raw_log', methods=['POST'])
+@app.route('/contentA', methods=['POST'])
 def process_raw_log():
-    raw_log = request.json.get('raw_message')
-    # print(raw_log)
+    raw_log = request.json.get('RAW_LOG')
+    split_rule = request.json.get('REGEX')
     
     # 使用正則表達式提取資料
     log_time_match = re.search(split_rule['log_time_regex'], raw_log)
@@ -43,13 +43,12 @@ def process_raw_log():
     
     # 組合最終的 log 資料
     log_data = {
-        "HOST_NAME": host_info.get("HOST_NAME", "Unknown"),
-        "HOST_IP": host_info.get("HOST_IP", "Unknown"),
-        "SYSTEM_TYPE": host_info.get("SYSTEM_TYPE", "Unknown"),
-        "PROCESS_NAME": host_info.get("PROCESS_NAME", "Unknown"),
-        "LEVEL": level.upper(),
+        "HOST_NAME": request.json.get("HOST_NAME", "Unknown"),
+        "HOST_IP": request.json.get("HOST_IP", "Unknown"),
+        "SYSTEM_TYPE": request.json.get("SYSTEM_TYPE", "Unknown"),
+        "PROCESS_NAME": request.json.get("PROCESS_NAME", "Unknown"),
+        "LEVEL": level.upper(), #轉大寫
         "CONTENT": message,
-        # "LOG_TIME": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         "LOG_TIME": f"{datetime.now().strftime('%Y-%m-%d')} {log_time}"
     }
     print("Log Data: ",log_data)

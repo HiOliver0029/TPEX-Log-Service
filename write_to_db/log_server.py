@@ -81,8 +81,13 @@ def check_legal_data(data):
     
     # 驗證 LEVEL
     level = data.get('LEVEL', '').upper()
-    if level not in ['INFO', 'WARN', 'ERR', 'ERRO', 'DEBUG']:
-        errors.append('LEVEL 必須是 INFO、WARN、DEBUG、ERRO 或 ERR')
+    if level in ('ERR', 'ERROR'):
+        level = 'ERRO'
+    if level in ('normal'):
+        level = 'INFO'
+
+    if level not in ['INFO', 'WARN', 'ERRO', 'DEBUG']:
+        errors.append('LEVEL 必須是 INFO、WARN、DEBUG 或 ERRO')
     
     # 驗證 PROCESS_NAME
     if len(data.get('PROCESS_NAME', '')) > 64:
@@ -129,8 +134,7 @@ def check_miss(data):
 #routing路徑為/log 用HTTP的post
 @app.route('/log', methods=['POST'])
 def log():
-    # data為client打來的JSON格式資料
-    # {"HOST_NAME":"XXXX" , "HOST_IP":"XXXX",.....}
+    # data為client打來的JSON格式資料(Format B)
     data = request.get_json()
     #檢查是否資料缺失
     missing_field = check_miss(data)
