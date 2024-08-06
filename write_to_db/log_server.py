@@ -81,8 +81,8 @@ def check_legal_data(data):
     
     # 驗證 LEVEL
     level = data.get('LEVEL', '').upper()
-    if level not in ['INFO', 'WARN', 'ERR', 'DEBUG']:
-        errors.append('LEVEL 必須是 INFO、WARN、DEBUG 或 ERR')
+    if level not in ['INFO', 'WARN', 'ERR', 'ERRO', 'DEBUG']:
+        errors.append('LEVEL 必須是 INFO、WARN、DEBUG、ERRO 或 ERR')
     
     # 驗證 PROCESS_NAME
     if len(data.get('PROCESS_NAME', '')) > 64:

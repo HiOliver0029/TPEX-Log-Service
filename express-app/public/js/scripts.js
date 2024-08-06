@@ -1,5 +1,5 @@
 function formatDate(dateString) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options).replace(',', '');
 }
 
@@ -55,20 +55,34 @@ document.getElementById('downloadCsvBtn').addEventListener('click', () => {
             result.SYSTEM_TYPE,
             result.LEVEL,
             result.PROCESS_NAME,
-            result.CONTENT,
+            result.CONTENT.replaceAll('#', '*').replaceAll(',', '/'), //將特殊字元改為其他代號才能寫進.csv檔案
             formatDate(result.LOG_TIME)
         ]);
     });
 
-    let csvContent = "data:text/csv;charset=utf-8,";
+    // let txtContent = "data:text/plain;charset=utf-8,\ufeff";
+    let csvContent = "data:text/csv;charset=utf-8,\ufeff";
+
+    // rows.forEach(rowArray => {
+    //     let row = rowArray.join("\t"); // 使用 tab 作為分隔符
+    //     txtContent += row + "\n";
+    //   });
 
     rows.forEach(rowArray => {
         let row = rowArray.join(",");
         csvContent += row + "\r\n";
     });
 
-    console.log('CSV content prepared');
-    console.log(csvContent);
+    // // 双引号包裹： 将整个行用双引号包裹，确保字段中的逗号和引号被正确处理。
+    // rows.forEach(rowArray => {
+    //     let row = rowArray.map(item => `"${item}"`).join(",");
+    //     // csvContent += `"${row}"\r\n`;
+    //     csvContent += row + "\r\n";
+    // });
+
+
+    // console.log('CSV content prepared');
+    // console.log(csvContent);
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

@@ -45,7 +45,7 @@ ipaddress = get_ip()
 
 def get_process(file_path):
     # Split the path by "."
-    parts = log_file_path.split(".")
+    parts = file_path.split(".")
 
     # Extract the process name (assuming the first part is the process name)
     if len(parts) > 0:
@@ -55,7 +55,7 @@ def get_process(file_path):
     return process_name
 
 process_name = get_process(log_file_path)
-print(process_name)
+# print(process_name)
 
 # 讀取已讀取的行數
 if not os.path.exists(offset_file):
@@ -84,6 +84,7 @@ def extract_level(line):
   space_index = line[:pipe_index].rfind(' ')
   # 取出空格到 '|' 之間的字串
   level = line[space_index+1:pipe_index]
+  level.upper()
   return level
 
 def extract_time(line):
