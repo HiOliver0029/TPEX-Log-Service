@@ -37,9 +37,15 @@ def process_raw_log():
     message_match = re.search(split_rule['message_regex'], raw_log)
     
     log_time = log_time_match.group(1) if log_time_match else "Unknown"
-    level = level_match.group(1) if level_match else "Unknown"
     message = message_match.group(1) if message_match else "Unknown"
-
+    level = level_match.group(1) if level_match else "Unknown"
+    level = level.upper()
+    if level in ('ERR', 'ERROR'):
+        level = 'ERRO'
+    elif level in ('NORMAL'):
+        level = 'INFO'
+    print(level)
+    
     
     # 組合最終的 log 資料
     log_data = {
@@ -47,7 +53,7 @@ def process_raw_log():
         "HOST_IP": request.json.get("HOST_IP", "Unknown"),
         "SYSTEM_TYPE": request.json.get("SYSTEM_TYPE", "Unknown"),
         "PROCESS_NAME": request.json.get("PROCESS_NAME", "Unknown"),
-        "LEVEL": level.upper(), #轉大寫
+        "LEVEL": level, #轉大寫
         "CONTENT": message,
         "LOG_TIME": f"{datetime.now().strftime('%Y-%m-%d')} {log_time}"
     }

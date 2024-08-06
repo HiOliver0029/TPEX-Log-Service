@@ -20,7 +20,6 @@ def load_config(config_file):
 # 設定檔案路徑及已讀取的行數記錄
 # log_file_path = 'rtfServer.log'
 log_file_path = 'test.log'
-offset_file = 'offset.txt'
 config_file = 'config.cfg'
 config_data = load_config(config_file)
 
@@ -94,6 +93,7 @@ for log_config in config_data['logs']:
     print(regex)
     # requests.post('http://localhost:5050/split_rule', json=split_rule)
 
+    offset_file = f'offset_{log_file_path}.txt'
     # 讀取已讀取的行數
     if not os.path.exists(offset_file):
         with open(offset_file, 'w') as f:

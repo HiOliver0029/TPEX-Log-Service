@@ -80,12 +80,7 @@ def check_legal_data(data):
         errors.append('SYSTEM_TYPE 超過 20 個字符')
     
     # 驗證 LEVEL
-    level = data.get('LEVEL', '').upper()
-    if level in ('ERR', 'ERROR'):
-        level = 'ERRO'
-    if level in ('normal'):
-        level = 'INFO'
-
+    level = data.get('LEVEL', '')
     if level not in ['INFO', 'WARN', 'ERRO', 'DEBUG']:
         errors.append('LEVEL 必須是 INFO、WARN、DEBUG 或 ERRO')
     
@@ -136,6 +131,7 @@ def check_miss(data):
 def log():
     # data為client打來的JSON格式資料(Format B)
     data = request.get_json()
+
     #檢查是否資料缺失
     missing_field = check_miss(data)
     if missing_field:
@@ -152,7 +148,7 @@ def log():
         if connection:
             #創一個游標，用來輸入sql指令
             cursor = connection.cursor()
-           
+            
             #%s是實際要插入的值,參數化input
             input_order = """
             INSERT INTO log_data (HOST_NAME, HOST_IP, SYSTEM_TYPE, LEVEL, PROCESS_NAME, CONTENT, LOG_TIME)
@@ -160,7 +156,6 @@ def log():
             """
 
             #執行
-            #data是request進來的JSON，{"HOST_NAME":"XX","HOST_IP":"XX"}
             cursor.execute(input_order, (
                 data['HOST_NAME'], data['HOST_IP'], data['SYSTEM_TYPE'], data['LEVEL'],
                 data['PROCESS_NAME'], data['CONTENT'], data['LOG_TIME']
