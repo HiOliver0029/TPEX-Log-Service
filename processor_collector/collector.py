@@ -109,7 +109,10 @@ def process_raw_log():
         print("Log Data: ",log_data)
         # 傳送 log 資料至最終儲存端點
         response = requests.post('http://localhost:5000/log', json=log_data)
-        return jsonify({"message": "Log processed", "status": response.status_code}), 200
+        if response.status_code == 201:
+            return jsonify({"message": "Log processed", "status": "success"}), 201
+        else:
+            return jsonify({"message": "format error", "status": "DB insert failed"}), response.status_code
 
 
     except MissingDataError as e:

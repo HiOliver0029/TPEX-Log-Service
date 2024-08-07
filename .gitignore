@@ -1,5 +1,5 @@
 # connect to db
-write_to_db/db_config.txt
+processor_collector/db_config.txt
 express-app/.env
 
 # dependencies
@@ -9,8 +9,7 @@ express-app/__pycache__/
 .vscode/
 
 # Not needed
-write_to_db/not_used/
-write_to_db/old_simulation_clients/
-write_to_db/*.json
-write_to_db/offset.txt
-write_to_db/big5_offset.txt
+processor_collector/not_used/
+processor_collector/old_simulation_clients/
+processor_collector/old_processor_collector/
+processor_collector/*.json

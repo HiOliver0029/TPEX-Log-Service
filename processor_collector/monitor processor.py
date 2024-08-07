@@ -66,18 +66,21 @@ class LogHandler(FileSystemEventHandler):
     def handle_log(self, log_config):
         file_path = log_config['file_path']
         last_offset = self.offsets.get(file_path, 0)
-        print("last_offset: ", last_offset)
+        print("Last offset (上次處理到第幾行): ", last_offset)
 
         with open(file_path, 'r', encoding='big5', errors='ignore') as f:
             lines = f.readlines()
-            print("lines length:", len(lines))
+            print(f"Length of file (目前檔案共有幾行):", len(lines))
             
         new_lines = []  # 确保 new_lines 有默认值
         # 如果新行數大於上次記錄的偏移量，處理新增加的行
         if last_offset < len(lines):
+            print("Log file change detected, start posting new data.")
             new_lines = lines[last_offset:]
             self.offsets[file_path] = len(lines)
             save_offsets(self.offsets)
+        else:
+            print("No new log added.")
    
         # 處理新增加的 log 行
         for line in new_lines:
@@ -104,7 +107,7 @@ class LogHandler(FileSystemEventHandler):
     def send_to_collector(self, log_data):
         try:
             response = requests.post('http://localhost:5050/contentA', json=log_data)
-            if response.status_code == 200:
+            if response.status_code == 201:
                 print(f"Log sent successfully: {response.status_code}")
             elif response.status_code == 402:
                 print(f"Log error (Level issue): {response.status_code}, {response.json().get('error')}")
