@@ -69,4 +69,7 @@ DB_DATABASE=yourdb
 
 ### Data Preprocessor
 #### 相關檔案
-進入`write-to-db`資料夾並開啟`log_server.py`後，可執行`collector.py`跟`monitor processor.py`來處理`config.cfg`檔案中所寫的log檔案，`monitor processor.py`將會記錄目前已寫入到第幾行log(透過`offsets.json`)，並將尚未處理過的原始log資料以及如何處理資料的正則表達式POST給`collector.py`，並由`collector.py`根據規則取出所需資料後POST給`log_server.py`，最後藉由`log_server.py`檢查格式是否錯誤並POST到資料庫。
+進入`write-to-db`資料夾並開啟`log_server.py`後，可執行`collector.py`跟`monitor processor.py`來處理`config.cfg`檔案中所寫的log檔案。  
+`monitor processor.py`將會記錄目前已寫入到第幾行log(透過`offsets.json`)，並將尚未處理過的原始log資料以及如何處理資料的正則表達式POST給`collector.py`。  
+接著由`collector.py`根據規則取出所需資料後POST給`log_server.py`，最後藉由`log_server.py`檢查格式是否錯誤並POST到資料庫。  
+成功後可以從`express-app`的資料夾中透過`node app.js`開啟前端查看資料庫中的資料。
