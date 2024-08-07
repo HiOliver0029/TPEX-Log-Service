@@ -1,0 +1,12 @@
+06:09:29 - Information > 設定作業日期為 2024/4/3
+06:09:41 - Information > [Commander] NewEmg Login Test《Executing#1》[jerry]
+06:09:43 - Information > [Commander] NewEmg Login Test《Result#1》[EmgTS1] Id/Password 測試正常 !
+06:09:51 - Information > [Commander] NewBond Login Test《Executing#1》[jerry]
+06:09:52 - Information > [Commander] NewBond Login Test《Result#1》[BondTS1] Id/Password 測試正常 !
+06:10:00 - Information > [Commander] Dpsp Login Test《Executing#1》[jerry]
+06:10:01 - Information > [Commander] Dpsp Login Test《Result#1》[Dpsp] Id/Password 測試正常 !
+06:10:12 - Information > [Commander] WebReport Login Test《Executing#1》[jerry]
+06:10:13 - Information > [Commander] WebReport Login Test《Result#1》[172.18.179.176] Id/Password 測試正常 !
+07:05:01 - Information > [Job] ╢07:05:00╟ GetIntrBkTdcc《Executing#1》[jerry]
+07:05:02 - Information > [Job] ╢07:05:00╟ GetIntrBkTdcc《Result#1》取得 [EmgTS1:/home/newemg/db/in/intrbktdcc]  成功
+07:05:03 - Information > [Job] ╢07:05:00╟ GetIntrBkTdcc《Result#1》將檔案 ["D:\My Programs\Temp\intrbktdcc"] 上傳至主機 [Dpsp] 成功

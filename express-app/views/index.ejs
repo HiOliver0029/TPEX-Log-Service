@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: lightyellow;
+        }
+        .container {
+            max-width: 75%;
+            margin-top: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Log Search</h1>
+        <div class="text-center mt-2">
+            <button id="modeToggleBtn" class="btn btn-secondary">Dark Mode</button>
+        </div>
+        <br>
+        <form id="searchForm">
+            <div class="form-group">
+                <label for="hostName">Host Name</label>
+                <input type="text" class="form-control" id="hostName" name="host_name" placeholder="Enter Host Name">
+            </div>
+            <div class="form-group">
+                <label for="hostIp">Host IP</label>
+                <input type="text" class="form-control" id="hostIp" name="host_ip" placeholder="Enter Host IP">
+            </div>
+            <div class="form-group">
+                <label for="systemType">System Type</label>
+                <input type="text" class="form-control" id="systemType" name="system_type" placeholder="Enter System Type">
+            </div>
+            <div class="form-group">
+                <label for="level">Log Level</label>
+                <select class="form-control" id="level" name="level">
+                    <option value="">Select Level (Default All)</option>
+                    <option value="INFO">INFO</option>
+                    <option value="WARN">WARN</option>
+                    <option value="ERRO">ERRO</option>
+                    <option value="DEBUG">DEBUG</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="logTimeStart">Log Time Start</label>
+                <input type="datetime-local" class="form-control" id="logTimeStart" name="log_time_start" placeholder="Start Date & Time">
+            </div>
+            <div class="form-group">
+                <label for="logTimeEnd">Log Time End</label>
+                <input type="datetime-local" class="form-control" id="logTimeEnd" name="log_time_end" placeholder="End Date & Time">
+            </div>            
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mt-4" id="resultsTable">
+                <thead>
+                    <button id="downloadCsvBtn" class="btn btn-primary mt-3 btn-block">Download Search Result (.csv)</button>
+                    <tr>
+                        <th>ID</th>
+                        <th>Host Name</th>
+                        <th>Host IP</th>
+                        <th>System Type</th>
+                        <th>Log Level</th>
+                        <th>Process Name</th>
+                        <th>Content</th>
+                        <th>Log Time</th>
+                        <!-- <th>Timestamp</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Results will be appended here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/js/scripts.js"></script>
+</body>
+</html>
+

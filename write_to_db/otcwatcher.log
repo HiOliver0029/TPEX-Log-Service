@@ -1,0 +1,14 @@
+09:00:13:00|ELog_Warn|R05|Mem用量 001主機 gt-bondts1 記憶體可用 21% 過低
+09:05:11:00|ELog_Warn|R05|Mem用量 001主機 gt-bondts1 記憶體可用 21% 過低
+10:24:18:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondts1 失敗(CheckProcess)
+10:24:20:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondts1 失敗
+10:24:21:00|ELog_Normal|R02|連線成功 001ping 主機 gt-bondcs1 成功
+10:24:22:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗(CheckProcess)
+10:24:22:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗(CheckFIXProcess)
+10:24:22:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗(CheckFIXLog)
+10:24:37:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondts1 失敗(CheckProcess)
+10:24:39:00|ELog_Normal|R02|連線成功 000ping 主機 gt-bondts1 成功
+10:24:41:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗
+10:24:43:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗(CheckProcess)
+10:24:45:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗(CheckFIXProcess)
+10:24:47:00|ELog_Warn|R02|連線錯誤 001ping 主機 gt-bondcs1 失敗(CheckFIXLog)

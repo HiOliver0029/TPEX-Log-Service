@@ -1,0 +1,21 @@
+body {
+    padding-top: 50px;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 800px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+h1 {
+    margin-bottom: 30px;
+}
+
