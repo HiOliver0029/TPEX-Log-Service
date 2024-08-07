@@ -1,5 +1,5 @@
 # connect to db
-write-to-db/db_config.txt
+write_to_db/db_config.txt
 express-app/.env
 
 # dependencies
@@ -9,8 +9,8 @@ express-app/__pycache__/
 .vscode/
 
 # Not needed
-write-to-db/not_used/
-write-to-db/old_simulation_clients/
-write-to-db/*.json
-write-to-db/offset.txt
-write-to-db/big5_offset.txt
+write_to_db/not_used/
+write_to_db/old_simulation_clients/
+write_to_db/*.json
+write_to_db/offset.txt
+write_to_db/big5_offset.txt
