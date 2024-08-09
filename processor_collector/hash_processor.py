@@ -4,14 +4,14 @@ import platform
 import json
 import requests
 import yaml
-import re
+import hashlib
+import time
 from datetime import datetime
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 
 # 配置檔案路徑
 config_file = 'config.cfg'
-offsets_file = 'offsets.json'
+offsets_file = 'hash_offsets.json'
+api_key_file = 'api_key.json'
 
 # 讀取配置檔案
 def load_config(config_file):
@@ -21,10 +21,18 @@ def load_config(config_file):
 
 config = load_config(config_file)
 
+# 讀取API密鑰
+def load_api_key(api_key_file):
+    with open(api_key_file, 'r') as f:
+        api_key = yaml.safe_load(f)
+    return api_key
+
+api_key = load_api_key(api_key_file)
+
 # 保存偏移量
 def save_offsets(offsets):
     with open(offsets_file, 'w') as f:
-        json.dump(offsets, f, indent=4) # 使用缩进确保每个日志文件的偏移量在单独的行上
+        json.dump(offsets, f, indent=4)
 
 # 讀取偏移量
 def load_offsets():
@@ -33,8 +41,7 @@ def load_offsets():
     with open(offsets_file, 'r') as f:
         return json.load(f)
 
-offsets = load_offsets() 
-print("offsets: ", offsets)
+offsets = load_offsets()
 
 # 取得主機資訊
 def get_host_info():
@@ -45,17 +52,31 @@ def get_host_info():
 
 host_name, ip_address = get_host_info()
 
+# 計算文件哈希值
+def calculate_hash(file_path):
+    hasher = hashlib.md5()
+    with open(file_path, 'rb') as f:
+        buf = f.read()
+        hasher.update(buf)
+    return hasher.hexdigest()
+
+# 檢查文件是否發生變更
+def check_files(log_configs):
+    for log_config in log_configs:
+        file_path = log_config['file_path']
+        new_hash = calculate_hash(file_path)
+        old_hash = offsets.get(file_path)
+
+        if new_hash != old_hash:
+            print(f"File {file_path} has changed.")
+            offsets[file_path] = new_hash
+            save_offsets(offsets)
+            event_handler.process(file_path)  # 調用處理函數
+
 # 檔案變更處理類
-class LogHandler(FileSystemEventHandler):
+class LogHandler:
     def __init__(self, config):
         self.config = config
-        self.offsets = offsets
-
-    def on_modified(self, event):
-        if event.is_directory:
-            return
-        # print("New log data added.")
-        self.process(event.src_path)
 
     def process(self, file_path):
         for log_config in self.config['logs']:
@@ -65,25 +86,12 @@ class LogHandler(FileSystemEventHandler):
 
     def handle_log(self, log_config):
         file_path = log_config['file_path']
-        last_offset = self.offsets.get(file_path, 0)
-        print("Last offset (上次處理到第幾行): ", last_offset)
 
         with open(file_path, 'r', encoding='big5', errors='ignore') as f:
             lines = f.readlines()
-            print(f"Length of file (目前檔案共有幾行):", len(lines))
-            
-        new_lines = []  # 确保 new_lines 有默认值
-        # 如果新行數大於上次記錄的偏移量，處理新增加的行
-        if last_offset < len(lines):
-            print("Log file change detected, start posting new data.")
-            new_lines = lines[last_offset:]
-            self.offsets[file_path] = len(lines)
-            save_offsets(self.offsets)
-        else:
-            print("No new log added.")
-   
+
         # 處理新增加的 log 行
-        for line in new_lines:
+        for line in lines:
             fields = log_config['fields']
             regex = {
                 "log_time_regex": fields['log_time'],
@@ -106,35 +114,29 @@ class LogHandler(FileSystemEventHandler):
 
     def send_to_collector(self, log_data):
         try:
-            response = requests.post('http://localhost:5050/contentA', json=log_data)
+            response = requests.post('http://localhost:5050/contentA', json=log_data, headers=api_key)
             if response.status_code == 201:
                 print(f"Log sent successfully: {response.status_code}")
-            elif response.status_code == 402:
-                print(f"Log error (Level issue): {response.status_code}, {response.json().get('error')}")
             elif response.status_code == 400:
                 print(f"Log error (Data missing): {response.status_code}, {response.json().get('error')}")
+            elif response.status_code == 401:
+                print(f"API key error: {response.status_code}, {response.json().get('error')}")
+            elif response.status_code == 402:
+                print(f"Log error (Level issue): {response.status_code}, {response.json().get('error')}")
             else:
                 print(f"Unexpected error: {response.status_code}, {response.json().get('error')}")
         except requests.exceptions.RequestException as e:
             print(f"Error sending log data to collector: {e}")
 
+# 主循環
 if __name__ == "__main__":
     config = load_config(config_file)
+    offsets = load_offsets()
     event_handler = LogHandler(config)
-    observer = Observer()
 
-    # 為每個 log 文件監視變化
-    for log_config in config['logs']:
-        print("Content of the config: ")
-        print("File Path:", log_config['file_path'])
-        print("System Type:", log_config['system_type'])
-        print("Regex:", log_config['fields'])
-        observer.schedule(event_handler, path=os.path.dirname(log_config['file_path']), recursive=False)
-
-    observer.start()
     try:
         while True:
-            pass
+            check_files(config['logs'])
+            time.sleep(1)  # 每隔 1 秒檢查一次文件狀態
     except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+        print("Stopping the file watcher.")

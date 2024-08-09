@@ -25,6 +25,26 @@ class MissingDataError(Exception):
 # 支援的日誌級別
 SUPPORTED_LEVELS = ['INFO', 'WARN', 'ERRO', 'DEBUG']
 
+# 允許的 API 金鑰列表
+API_KEYS = {"1234567890abcdef"}  # 替換成實際的金鑰
+
+# def validate_api_key():
+#     api_key = request.headers.get('collector-api-key')
+#     print("key: ", api_key)
+#     if api_key not in API_KEYS:
+#         return False
+#     return True
+
+def validate_api_key(f):
+    def decorator(*args, **kwargs):
+        api_key = request.headers.get('collector-api-key')
+        if api_key not in API_KEYS:
+            return jsonify({"error": "Unauthorized access"}), 401
+        print("API Keys matched.")
+        return f(*args, **kwargs)
+    return decorator
+
+
 # host_info = {}
 # split_rule = {}
 
@@ -62,7 +82,10 @@ def parse_log(raw_log, split_rule):
     return log_time, level, message
 
 @app.route('/contentA', methods=['POST'])
+@validate_api_key
 def process_raw_log():
+    # if not validate_api_key():
+    #     return jsonify({"error": "Unauthorized access"}), 401
     try:
         raw_log = request.json.get('RAW_LOG')
         split_rule = request.json.get('REGEX')
@@ -107,6 +130,7 @@ def process_raw_log():
             "LOG_TIME": f"{datetime.now().strftime('%Y-%m-%d')} {log_time}"
         }
         print("Log Data: ",log_data)
+        # server_api_key = "1234567890abcdef"
         # 傳送 log 資料至最終儲存端點
         response = requests.post('http://localhost:5000/log', json=log_data)
         if response.status_code == 201:
@@ -132,6 +156,7 @@ def process_raw_log():
         return jsonify({"error": "Internal server error"}), 500
     
     # 缺失資料檢查：
+    # 401: API key 錯誤
 
     # 在處理 raw_log、split_rule、host_name、host_ip、system_type 和 process_name 等必需字段時，若有任何一個缺失，則引發 MissingDataError 並回傳 HTTP 狀態碼 400。
     # 無效的日誌級別：

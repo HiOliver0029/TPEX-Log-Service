@@ -3,10 +3,22 @@ import mysql.connector
 import configparser
 from mysql.connector import Error
 from flask_cors import CORS
+import yaml
 import os
 
 app = Flask(__name__, static_folder='public')
 CORS(app)
+
+# # 允許的 API 金鑰列表
+# API_KEYS = {"1234567890abcdef"}  # 替換成實際的金鑰
+# def validate_api_key(f):
+#     def decorator(*args, **kwargs):
+#         api_key = request.headers.get('server-api-key')
+#         if api_key not in API_KEYS:
+#             return jsonify({"error": "Unauthorized access"}), 401
+#         print("API Keys matched.")
+#         return f(*args, **kwargs)
+#     return decorator
 
 # 讀取配置文件
 config = configparser.ConfigParser()
@@ -19,9 +31,9 @@ db_config = {
     'database': config.get('DEFAULT', 'database')
 }
 
-@app.route('/', methods=['GET'])
-def serve_index():
-    return send_from_directory(app.static_folder, 'index.html')
+# @app.route('/', methods=['GET'])
+# def serve_index():
+#     return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/search', methods=['GET'])
 def search_logs():
