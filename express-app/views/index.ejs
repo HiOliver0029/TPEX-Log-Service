@@ -43,15 +43,36 @@
                 <label for="systemType">System Type</label>
                 <input type="text" class="form-control" id="systemType" name="system_type" placeholder="Enter System Type">
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="level">Log Level</label>
-                <select class="form-control" id="level" name="level">
+                <select class="form-control" id="level" name="level" multiple>
                     <option value="">Select Level (Default All)</option>
                     <option value="INFO">INFO</option>
                     <option value="WARN">WARN</option>
                     <option value="ERRO">ERRO</option>
                     <option value="DEBUG">DEBUG</option>
                 </select>
+            </div> -->
+            <div class="form-group">
+                <label>Log Level</label>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="level-info" name="level" value="INFO">
+                        <label class="form-check-label" for="level-info">INFO</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="level-warn" name="level" value="WARN">
+                        <label class="form-check-label" for="level-warn">WARN</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="level-error" name="level" value="ERRO">
+                        <label class="form-check-label" for="level-error">ERRO</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="level-debug" name="level" value="DEBUG">
+                        <label class="form-check-label" for="level-debug">DEBUG</label>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="logTimeStart">Log Time Start</label>

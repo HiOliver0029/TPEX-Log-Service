@@ -19,3 +19,12 @@ h1 {
     margin-bottom: 30px;
 }
 
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.form-check-input {
+    margin-right: 5px;
+}

@@ -45,8 +45,13 @@ app.get('/search', (req, res) => {
     if (system_type) {
         query += ` AND SYSTEM_TYPE LIKE '%${system_type}%'`;
     }
+    // if (level) {
+    //     query += ` AND LEVEL = '${level}'`;
+    // }
     if (level) {
-        query += ` AND LEVEL = '${level}'`;
+        const levels = Array.isArray(level) ? level : [level];
+        const levelsPlaceholder = levels.map(lvl => `'${lvl}'`).join(',');
+        query += ` AND LEVEL IN (${levelsPlaceholder})`;
     }
     if (log_time_start && log_time_end) {
         query += ` AND LOG_TIME BETWEEN '${log_time_start}' AND '${log_time_end}'`;

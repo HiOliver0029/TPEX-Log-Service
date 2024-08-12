@@ -60,6 +60,7 @@ def validate_api_key(f):
 #     split_rule = request.json
 #     return jsonify({"message": "Split rule received"}), 200
 
+# 使用正則表達式提取資料
 def parse_log(raw_log, split_rule):
     log_time_match = re.search(split_rule['log_time_regex'], raw_log)
     level_match = re.search(split_rule['level_regex'], raw_log)
@@ -98,7 +99,7 @@ def process_raw_log():
         if not all([raw_log, split_rule, host_name, host_ip, system_type, process_name]):
             raise MissingDataError("Missing required fields in the request")
     
-        # 使用正則表達式提取資料
+  
         # log_time_match = re.search(split_rule['log_time_regex'], raw_log)
         # level_match = re.search(split_rule['level_regex'], raw_log)
         # message_match = re.search(split_rule['message_regex'], raw_log)
