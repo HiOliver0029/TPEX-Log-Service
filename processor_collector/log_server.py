@@ -9,6 +9,9 @@ import os
 app = Flask(__name__, static_folder='public')
 CORS(app)
 
+# 支援的日誌級別
+SUPPORTED_LEVELS = ['INFO', 'WARN', 'ERRO', 'DEBUG', '']
+
 # # 允許的 API 金鑰列表
 # API_KEYS = {"1234567890abcdef"}  # 替換成實際的金鑰
 # def validate_api_key(f):
@@ -98,7 +101,7 @@ def check_legal_data(data):
     
     # 驗證 LEVEL
     level = data.get('LEVEL', '')
-    if level not in ['INFO', 'WARN', 'ERRO', 'DEBUG']:
+    if level not in SUPPORTED_LEVELS:
         errors.append('LEVEL 必須是 INFO、WARN、DEBUG 或 ERRO')
     
     # 驗證 PROCESS_NAME
@@ -148,7 +151,7 @@ def check_miss(data):
 def log():
     # data為client打來的JSON格式資料(Format B)
     data = request.get_json()
-
+    #response = request.json()
     #檢查是否資料缺失
     missing_field = check_miss(data)
     if missing_field:

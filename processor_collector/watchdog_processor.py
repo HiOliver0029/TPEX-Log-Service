@@ -105,47 +105,6 @@ class LogHandler(FileSystemEventHandler):
                 print("Now handling file:", file_path)
                 self.handle_log(log_config)
 
-    # def handle_log(self, log_config):
-    #     file_path = log_config['file_path']
-    #     last_offset = self.offsets.get(file_path, 0)
-    #     print("Last offset (上次處理到第幾行): ", last_offset)
-
-    #     with open(file_path, 'r', encoding='big5', errors='ignore') as f:
-    #         lines = f.readlines()
-    #         print(f"Length of file (目前檔案共有幾行):", len(lines))
-            
-    #     new_lines = []  # 确保 new_lines 有默认值
-    #     # 如果新行數大於上次記錄的偏移量，處理新增加的行
-    #     if last_offset < len(lines):
-    #         print("Log file change detected, start posting new data.")
-    #         new_lines = lines[last_offset:]
-    #         self.offsets[file_path] = len(lines)
-    #         save_offsets(self.offsets)
-    #     else:
-    #         print("No new log added.")
-   
-    #     # 處理新增加的 log 行
-    #     for line in new_lines:
-    #         fields = log_config['fields']
-    #         regex = {
-    #             "log_time_regex": fields['log_time'],
-    #             "level_regex": fields['level'],
-    #             "message_regex": fields['content']
-    #         }
-    #         # 組合 Format A 的資料
-    #         log_data = {
-    #             "HOST_NAME": host_name,
-    #             "HOST_IP": ip_address,
-    #             "SYSTEM_TYPE": log_config['system_type'],
-    #             "PROCESS_NAME": os.path.basename(log_config['file_path']).split('.')[0],
-    #             "REGEX": regex,
-    #             "RAW_LOG": line.strip(),
-    #             "TIMESTAMP": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    #         }
-    #         print("Raw data:", log_data)
-    #         # 發送資料到 Collector
-    #         self.send_to_collector(log_data)
-
     def handle_log(self, log_config):
         file_path = log_config['file_path']
         last_offset = self.offsets.get(file_path, 0)
@@ -166,10 +125,12 @@ class LogHandler(FileSystemEventHandler):
         # 處理新增加的 log 行
         for i, line in enumerate(new_lines):
             fields = log_config['fields']
+            level_rule = log_config['level_rule']
             regex = {
                 "log_time_regex": fields['log_time'],
                 "level_regex": fields['level'],
-                "message_regex": fields['content']
+                "message_regex": fields['content'],
+                "level_rule": level_rule
             }
             # 組合 Format A 的資料
             log_data = {
@@ -179,7 +140,7 @@ class LogHandler(FileSystemEventHandler):
                 "PROCESS_NAME": os.path.basename(log_config['file_path']).split('.')[0],
                 "REGEX": regex,
                 "RAW_LOG": line.strip(),
-                "TIMESTAMP": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                # "TIMESTAMP": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
             print("Raw data:", log_data)
             # 發送資料到 Collector

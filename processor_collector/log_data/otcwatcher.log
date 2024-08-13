@@ -1,14 +1,14 @@
-09:00:13:00|ELog_Warn|R05|Memï¿½Î¶q 001ï¿½Dï¿½ï¿½ gt-bondts1 ï¿½Oï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ 21% ï¿½Lï¿½C
-09:05:11:00|ELog_Warn|R05|Memï¿½Î¶q 001ï¿½Dï¿½ï¿½ gt-bondts1 ï¿½Oï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ 21% ï¿½Lï¿½C
-10:24:18:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondts1 ï¿½ï¿½ï¿½ï¿½(CheckProcess)
-10:24:20:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondts1 ï¿½ï¿½ï¿½ï¿½
-10:24:21:00|ELog_Normal|R02|ï¿½sï¿½uï¿½ï¿½ï¿½\ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½\
-10:24:22:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½(CheckProcess)
-10:24:22:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½(CheckFIXProcess)
-10:24:22:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½(CheckFIXLog)
-10:24:37:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondts1 ï¿½ï¿½ï¿½ï¿½(CheckProcess)
-10:24:39:00|ELog_Normal|R02|ï¿½sï¿½uï¿½ï¿½ï¿½\ 000ping ï¿½Dï¿½ï¿½ gt-bondts1 ï¿½ï¿½ï¿½\
-10:24:41:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½
-10:24:43:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½(CheckProcess)
-10:24:45:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½(CheckFIXProcess)
-10:24:47:00|ELog_Warn|R02|ï¿½sï¿½uï¿½ï¿½ï¿½~ 001ping ï¿½Dï¿½ï¿½ gt-bondcs1 ï¿½ï¿½ï¿½ï¿½(CheckFIXLog)
+09:00:13:00|ELog_Warn|R05|Mem¥Î¶q 001¥D¾÷ gt-bondts1 °O¾ÐÅé¥i¥Î 21% ¹L§C
+09:05:11:00|ELog_Warn|R05|Mem¥Î¶q 001¥D¾÷ gt-bondts1 °O¾ÐÅé¥i¥Î 21% ¹L§C
+10:24:18:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondts1 ¥¢±Ñ(CheckProcess)
+10:24:20:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondts1 ¥¢±Ñ
+10:24:21:00|ELog_Normal|R02|³s½u¦¨¥\ 001ping ¥D¾÷ gt-bondcs1 ¦¨¥\
+10:24:22:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ(CheckProcess)
+10:24:22:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ(CheckFIXProcess)
+10:24:22:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ(CheckFIXLog)
+10:24:37:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondts1 ¥¢±Ñ(CheckProcess)
+10:24:39:00|ELog_Normal|R02|³s½u¦¨¥\ 000ping ¥D¾÷ gt-bondts1 ¦¨¥\
+10:24:41:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ
+10:24:43:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ(CheckProcess)
+10:24:45:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ(CheckFIXProcess)
+10:24:47:00|ELog_Warn|R02|³s½u¿ù»~ 001ping ¥D¾÷ gt-bondcs1 ¥¢±Ñ(CheckFIXLog)
