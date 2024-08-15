@@ -2,7 +2,7 @@ from locust import HttpUser, TaskSet, task, between, events
 import json
 
 class UserBehavior(TaskSet):
-    headers = {"collector-api-key": "1234567890abcdef"}
+    headers = {"collector-api-key": "202408testing"}
 
     # collector.py 
     @task

@@ -1,3 +1,4 @@
+import sys
 import os
 import socket
 import platform
@@ -15,7 +16,10 @@ curr_time = datetime.now().strftime('%Y%m%d')
 # 配置檔案路徑
 config_file = 'config.cfg'
 offsets_file = f'offsets_{curr_time}.json'
-api_key_file = 'api_key.json'
+api_key_file = 'hash_api_key.json'
+
+class KeyNotFoundError(Exception):
+    pass
 
 # 讀取配置檔案
 def load_config(config_file):
@@ -24,13 +28,6 @@ def load_config(config_file):
     return config
 
 config = load_config(config_file)
-
-def load_api_key(api_key_file):
-    with open(api_key_file, 'r') as f:
-        api_key = yaml.safe_load(f)
-    return api_key
-
-api_key = load_api_key(api_key_file)
 
 # 保存偏移量
 def save_offsets(offsets):
@@ -45,7 +42,7 @@ def load_offsets():
         return json.load(f)
 
 offsets = load_offsets() 
-print("offsets: ", offsets)
+# print("offsets: ", offsets)
 
 # 取得主機資訊
 # def get_host_info():
@@ -63,6 +60,7 @@ class HostInfo:
             # Windows 系統的處理方式
             name = platform.uname()
             host_name = name.node
+            # host_name = "0000000000000000000000000000000000000000000000000000000000000000"
             ip_address = socket.gethostbyname(socket.gethostname())
         elif system_type == "Linux":
             # Linux 系統的處理方式
@@ -83,6 +81,60 @@ class HostInfo:
         return host_name, ip_address if system_type == "Windows" else host_ip
 
 host_name, ip_address = HostInfo.get_host_info()
+
+
+# 檢查是否已在白名單並取得API Key
+def get_api_key(ip_address):
+    response = requests.post("http://localhost:5050/verify-whitelist", json={"client_ip": ip_address})
+    print("Response:", response.json())
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error:", response.json().get("error"))
+        return None
+
+def save_api_key(api_key, api_key_file):
+    # api_key_data = {"collector-api-key": api_key}
+    with open(api_key_file, 'w') as f:
+        json.dump(api_key, f, indent=4)
+    print("Key generated and saved to file.")
+
+# 從文件讀取或驗證新API Key
+def load_api_key(api_key_file):
+    try:
+        with open(api_key_file, 'r') as f:
+            api_key_data = yaml.safe_load(f)
+        return api_key_data
+    except FileNotFoundError:
+        print("API key file not found, generating a new key...")
+        api_key_data = get_api_key(ip_address)
+        save_api_key(api_key_data, api_key_file)
+        return api_key_data
+
+# 儲存API Key到文件
+# def save_api_key(api_key, api_key_file):
+#     try:
+#         if api_key is None:
+#             raise KeyNotFoundError
+#         api_key_data = {"collector-api-key": api_key}
+#         with open(api_key_file, 'w') as f:
+#             json.dump(api_key_data, f, indent=4)
+#     except KeyNotFoundError:
+#         print("API key null, generating a new key...")
+#         return get_api_key(ip_address)
+
+
+# 載入API Key，如果沒有則生成新的
+api_key_data = load_api_key(api_key_file)
+data = api_key_data['collector-api-key']
+print("Key is...", data)
+
+
+# if api_key is None:
+#     print("IP:", ip_address)
+#     api_key = get_api_key(ip_address)
+#     save_api_key(api_key, api_key_file)
+#     print("Key generated and saved to file.")
 
 # 檔案變更處理類
 class LogHandler(FileSystemEventHandler):
@@ -152,7 +204,11 @@ class LogHandler(FileSystemEventHandler):
 
     def send_to_collector(self, log_data):
         try:
-            response = requests.post('http://localhost:5050/contentA', json=log_data, headers=api_key)
+            url = 'http://localhost:5050/contentA'
+            # print("KEY:", api_key)
+            headers={"collector-api-key": api_key_data['collector-api-key']}
+            # print(headers)
+            response = requests.post(url, json=log_data, headers=headers)
             # response = requests.post('http://172.20.10.3:5050/log', json=log_data)
             if response.status_code == 201:
                 print(f"Log sent successfully: {response.status_code}")
@@ -160,12 +216,23 @@ class LogHandler(FileSystemEventHandler):
                 print(f"Log error (Data missing): {response.status_code}, {response.json().get('error')}")
             elif response.status_code == 401:
                 print(f"API key error: {response.status_code}, {response.json().get('error')}")
+                sys.exit(1)
             elif response.status_code == 402:
-                print(f"Log error (Level issue): {response.status_code}, {response.json().get('error')}")
+                print(f"Log error (Format issue): {response.status_code}. {response.json().get('error')}")
+                sys.exit(1)
+            elif response.status_code == 403:
+                print(f"Permission error: {response.status_code}. {response.json().get('error')}")
+                sys.exit(1)
+            elif response.status_code == 502:
+                print(f"Server connection error: {response.status_code}. Please restart the logger.")
+                sys.exit(1)
             else:
                 print(f"Unexpected error: {response.status_code}, {response.json().get('error')}")
+                sys.exit(1)
+                
         except requests.exceptions.RequestException as e:
-            print(f"Error sending log data to collector: {e}")
+            print(f"Please start collector. Error sending log data to collector: {e}")
+            sys.exit(1)  # 中止程式，傳回碼 1 表示異常退出
 
 if __name__ == "__main__":
     config = load_config(config_file)
@@ -174,10 +241,6 @@ if __name__ == "__main__":
 
     # 為每個 log 文件監視變化
     for log_config in config['logs']:
-        # print("Content of the config: ")
-        # print("File Path:", log_config['file_path'])
-        # print("System Type:", log_config['system_type'])
-        # print("Regex:", log_config['fields'])
         observer.schedule(event_handler, path=os.path.dirname(log_config['file_path']), recursive=False)
 
     observer.start()

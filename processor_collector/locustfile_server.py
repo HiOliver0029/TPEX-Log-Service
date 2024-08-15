@@ -2,7 +2,7 @@ from locust import HttpUser, TaskSet, task, between, events
 import json
 
 class UserBehavior(TaskSet):
-    headers = {"server-api-key": "1234567890abcdef"}
+    # headers = {"server-api-key": "1234567890abcdef"}
 
     # log_server.py
     @task(3)  # 設定此任務的權重為3，會更頻繁地執行

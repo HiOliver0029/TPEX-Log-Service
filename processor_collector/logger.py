@@ -114,8 +114,9 @@ def check_legal_data(data):
     # 驗證 LOG_TIME
     if len(data.get('LOG_TIME', '')) > 19:
         errors.append('LOG_TIME 超過 19 個字符')
+        
     if errors:
-        print('Wrong data format') 
+        print(f'Wrong data format. {errors}') 
 
     return errors
     
@@ -134,7 +135,7 @@ def create_connection():
         return None
 
 def check_miss(data):
-    # 檢查資料是否殘缺
+    # 檢查資料是否殘缺 (沒有 key)
     required_fields = ['HOST_NAME', 'HOST_IP', 'SYSTEM_TYPE', 'LEVEL', 'PROCESS_NAME', 'CONTENT', 'LOG_TIME']
     miss_field = []
     for field in required_fields:
@@ -200,7 +201,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     
     
-## data缺失或不符規範400
+## data缺失400，不符規範402
 ##讀取成功200 創建成功201
 ##連接失敗500
-##非連接問題失敗501
+##非連接問題失敗501 (SQL 指令或資料庫結構問題)
