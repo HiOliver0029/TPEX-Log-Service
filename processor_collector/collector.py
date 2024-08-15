@@ -17,8 +17,8 @@ app = Flask(__name__)
 
 # 自定義錯誤類別
 # 正則表達式錯誤處理
-class LogParseError(Exception):
-    pass
+# class LogParseError(Exception):
+#     pass
 
 class InvalidLogLevelError(Exception):
     pass
@@ -33,16 +33,22 @@ class PermissionError(Exception):
 SUPPORTED_LEVELS = ['INFO', 'WARN', 'ERRO', 'DEBUG', '']
 
 # 定義IP白名單
-whitelist_ips = [
-    "172.17.9.178",
-    "172.17.16.80",
-    "172.17.16.81",
-    "172.17.16.82",
-    "172.17.16.83",
-    "172.20.10.7",
-    "192.168.95.27",
-    "172.21.128.1"
-]
+# whitelist_ips = [
+#     "172.17.9.178",
+#     "172.17.16.80",
+#     "172.17.16.81",
+#     "172.17.16.82",
+#     "172.17.16.83",
+#     "172.20.10.7",
+#     "192.168.95.27",
+#     "172.21.128.1"
+# ]
+
+# 讀取 IP白名單 JSON 檔案
+with open('whitelist.json', 'r') as f:
+    data = json.load(f)
+# 獲取 IP 白名單
+whitelist_ips = data['ips']
 
 # def is_key_valid(api_key, stored_hashed_key, expiration_date):
 #     if datetime.now() > expiration_date:
@@ -85,9 +91,9 @@ def validate_api_key(f):
         api_key = request.headers.get('collector-api-key')
         expiration_date = API_KEYS.get(api_key)
         if not api_key or not expiration_date:
-            return jsonify({"error": "Unauthorized access. Please acquire new key."}), 401
+            return jsonify({"error": "Unauthorized access (Wrong key or collector restarted). Please delete old key and acquire new key."}), 401
         if datetime.now() > expiration_date:
-            return jsonify({"error": "API key expired. Please acquire new key."}), 401
+            return jsonify({"error": "API key expired. Please delete old key and acquire new key."}), 401
         return f(*args, **kwargs)
     return decorator
 
@@ -123,8 +129,13 @@ def process_raw_log():
         process_name = request.json.get("PROCESS_NAME")
         
         # 檢查必需的資料
-        if not all([raw_log, split_rule, host_name, host_ip, system_type, process_name]):
-            raise MissingDataError("Missing required fields in the request")
+        missing_fields = [field for field, value in {"raw_log": raw_log, "split_rule": split_rule, "host_name": host_name, "host_ip": host_ip, "system_type": system_type, "process_name": process_name}.items() if not value]
+
+        if missing_fields:
+            raise MissingDataError(f"Client missing required fields in the request: {', '.join(missing_fields)}")
+        # 檢查必需的資料
+        # if not all([raw_log, split_rule, host_name, host_ip, system_type, process_name]):
+        #     raise MissingDataError("Missing required fields in the request")
 
         if host_ip not in whitelist_ips:
             raise PermissionError("IP Not in whitelist. Permission denied.")
@@ -149,10 +160,8 @@ def process_raw_log():
         response = requests.post('http://localhost:5000/log', json=log_data)
         if response.status_code == 201:
             return jsonify({"message": "Log processed", "status": "success"}), 201
-        # elif response.status_code == 402:
-        #     return jsonify({"message": "Wrong data format", "error": f'{message}'}), 402
         else:
-            return jsonify({"message": "Format error", "status": "Database insert failed"}), response.status_code
+            return jsonify({"error": response.json().get('message','N/A'), "status": "Error"}), response.status_code
         
 
     except MissingDataError as e:
@@ -167,13 +176,13 @@ def process_raw_log():
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 403
 
-    except LogParseError as e:
-        print(f"Error: {e}")
-        return jsonify({"error": str(e)}), 500
+    # except LogParseError as e:
+    #     print(f"Error: {e}")
+    #     return jsonify({"error": str(e)}), 500
     
-    except requests.exceptions.ConnectionError as e:
+    except requests.exceptions.ConnectionError:
         print("Logger unavailable. Please restart the logger.")
-        return jsonify({"error": str(e)}), 502
+        return jsonify({"error": "Logger unavailable. Please restart the logger."}), 502
 
     except Exception as e:
         print(f"Unexpected Error: {e}")
@@ -192,5 +201,5 @@ def process_raw_log():
     # 捕捉其他未預期的錯誤並回傳 HTTP 狀態碼 500。
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5050)
+    app.run(host='0.0.0.0', port=5050, threaded = True)
 

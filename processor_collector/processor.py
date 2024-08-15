@@ -61,7 +61,7 @@ class HostInfo:
             name = platform.uname()
             host_name = name.node
             # host_name = "0000000000000000000000000000000000000000000000000000000000000000"
-            ip_address = socket.gethostbyname(socket.gethostname())
+            host_ip = socket.gethostbyname(socket.gethostname())
         elif system_type == "Linux":
             # Linux 系統的處理方式
             subprocess.run(['chmod', '+x', 'get_host_info.sh'])
@@ -78,7 +78,7 @@ class HostInfo:
         else:
             raise ValueError(f"Unsupported system type: {system_type}")
 
-        return host_name, ip_address if system_type == "Windows" else host_ip
+        return host_name, host_ip
 
 host_name, ip_address = HostInfo.get_host_info()
 
@@ -214,14 +214,20 @@ class LogHandler(FileSystemEventHandler):
                 print(f"Log sent successfully: {response.status_code}")
             elif response.status_code == 400:
                 print(f"Log error (Data missing): {response.status_code}, {response.json().get('error')}")
+                print('Please check sent data and config of log. If a column does not exist, send an empty string.')
+                sys.exit(1)
             elif response.status_code == 401:
                 print(f"API key error: {response.status_code}, {response.json().get('error')}")
                 sys.exit(1)
             elif response.status_code == 402:
                 print(f"Log error (Format issue): {response.status_code}. {response.json().get('error')}")
+                print('Please check the config of log.')
                 sys.exit(1)
             elif response.status_code == 403:
                 print(f"Permission error: {response.status_code}. {response.json().get('error')}")
+                sys.exit(1)
+            elif response.status_code == 500:
+                print(f"Error: {response.status_code}. {response.json().get('error')}")
                 sys.exit(1)
             elif response.status_code == 502:
                 print(f"Server connection error: {response.status_code}. Please restart the logger.")
@@ -230,6 +236,9 @@ class LogHandler(FileSystemEventHandler):
                 print(f"Unexpected error: {response.status_code}, {response.json().get('error')}")
                 sys.exit(1)
                 
+        except requests.exceptions.ConnectionError: # collector沒開
+            print("Failed to connect to the collector server. Please restart the collector.")
+            sys.exit(1)
         except requests.exceptions.RequestException as e:
             print(f"Please start collector. Error sending log data to collector: {e}")
             sys.exit(1)  # 中止程式，傳回碼 1 表示異常退出

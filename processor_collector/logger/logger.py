@@ -12,17 +12,6 @@ CORS(app)
 # 支援的日誌級別
 SUPPORTED_LEVELS = ['INFO', 'WARN', 'ERRO', 'DEBUG', '']
 
-# # 允許的 API 金鑰列表
-# API_KEYS = {"1234567890abcdef"}  # 替換成實際的金鑰
-# def validate_api_key(f):
-#     def decorator(*args, **kwargs):
-#         api_key = request.headers.get('server-api-key')
-#         if api_key not in API_KEYS:
-#             return jsonify({"error": "Unauthorized access"}), 401
-#         print("API Keys matched.")
-#         return f(*args, **kwargs)
-#     return decorator
-
 # 讀取配置文件
 config = configparser.ConfigParser()
 config.read('db_config.txt')
@@ -88,8 +77,8 @@ def search_logs():
 def check_legal_data(data):
     errors = []
     # 驗證 HOST_NAME
-    if len(data.get('HOST_NAME', '')) > 16:
-        errors.append('HOST_NAME 超過 16 個字符')
+    if len(data.get('HOST_NAME', '')) > 32:
+        errors.append('HOST_NAME 超過 32 個字符')
     
     # 驗證 HOST_IP
     if len(data.get('HOST_IP', '')) > 15:
@@ -156,12 +145,12 @@ def log():
     #檢查是否資料缺失
     missing_field = check_miss(data)
     if missing_field:
-        return jsonify({'status': 'error', 'message': f'Missing field: {missing_field}'}), 400
+        return jsonify({'status': 'data missing', 'message': f'Missing field: {missing_field}'}), 400
 
     #檢查數據是否合法
     data_unlegal = check_legal_data(data)
     if data_unlegal:
-        return jsonify({'status': 'error', 'message': f'{data_unlegal}'}), 402
+        return jsonify({'status': 'data format wrong', 'message': f'{data_unlegal}'}), 402
      
     #無資料殘缺
     try:
@@ -191,11 +180,12 @@ def log():
             return jsonify({'status': 'success', 'message': 'Log entry added successfully'}), 201
 
         #連接失敗，告訴client
+        #原因: (1)sql 帳號密碼錯誤 (2)sql service 沒開
         else:
             return jsonify({'status': 'error', 'message': 'Database connection failed'}), 500
-   #非資料庫連接錯誤：在if內執行時發生錯誤，例如資料格式錯誤 
+   #非資料庫連接錯誤：logger 的 (1) sql 指令錯誤 (2) python code 寫錯了
     except Error as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 501
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
@@ -203,5 +193,4 @@ if __name__ == '__main__':
     
 ## data缺失400，不符規範402
 ##讀取成功200 創建成功201
-##連接失敗500
-##非連接問題失敗501 (SQL 指令或資料庫結構問題)
+##連接失敗、非資料庫連接錯誤500

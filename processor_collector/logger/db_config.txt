@@ -1,0 +1,5 @@
+[DEFAULT]  
+user=oliver
+password=Abcd1234
+host=localhost  
+database=logdb 
