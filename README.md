@@ -96,7 +96,20 @@ logs:
 其中 file_path 是該 log 檔案的絕對路徑，system_type 是系統相關的資訊，fields 則是告訴 collector 如何切割 log 檔案的正則表達式規範。level_rule 則會將原本 log 檔案中特定格式轉換為可以存進資料庫的規則，比如在上面的例子中，原本 log 檔案透過正則表達式抓到的字串可能是'NORMAL'，此時透過此 rule 可以讓 collector 知道要將其轉換為 'INFO' 以符合規範。符合規範的 level 包含 {INFO, WARN, ERRO, DEBUG}.
 
 ### 錯誤代碼說明
-請參考 `error_code.md` 檔案
+請參考 `collector_openapi.yaml` 檔案，透過openapi生成文件，來查看錯誤代碼及相關規範。  
+為了更方便查看，請先下 `podman pull swaggerapi/swagger-ui` 指令拉取鏡像，接著在 yaml 檔所在的資料夾下指令
+```bash
+podman run -p 8080:8080 -e SWAGGER_JSON=/foo/openapi.yaml -v <yourYaml FilePath>:/foo/openapi.yaml swaggerapi/swagger-ui
+```
+接著就可在瀏覽器開啟 `localhost:8080` ，透過 Swagger UI 這個網站看到關於狀態碼的說明，如下圖：  
+![Swagger 介面](/images/openapi.png)
+![Swagger 呈現狀態碼](/images/openapi2.png)  
+
+指令解釋：
+  - podman run: 用於啟動一個新的容器。
+  - -p 8080:8080: 將容器內的 8080 端口映射到主機的 8080 端口，以便您通過瀏覽器訪問 Swagger UI。
+  - -e SWAGGER_JSON=/foo/openapi.yaml: 將環境變量 SWAGGER_JSON 設置為 /foo/openapi.yaml，告訴 Swagger UI 在容器內尋找這個文件。
+  - -v <yourYaml FilePath>:/foo/openapi.yaml: 將本地文件系統中的 YAML 文件掛載到容器內的 /foo/openapi.yaml 路徑。
 
 ### 壓力測試
 首先透過 `pip install locust` 指令安裝 locust。
