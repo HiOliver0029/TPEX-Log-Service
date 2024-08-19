@@ -12,4 +12,4 @@ express-app/__pycache__/
 processor_collector/not_used/
 processor_collector/old_simulation_clients/
 processor_collector/old_processor_collector/
-processor_collector/*.json
+# processor_collector/*.json

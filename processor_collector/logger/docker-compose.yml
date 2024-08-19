@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  localhost: #原為db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: Abcd1234
+      MYSQL_DATABASE: logdb
+      MYSQL_USER: oliver
+      MYSQL_PASSWORD: Abcd1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db_init:/docker-entrypoint-initdb.d
+
+  web:
+    build: .
+    command: flask run --host=0.0.0.0
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=localhost
+      - DB_USER=oliver
+      - DB_PASSWORD=Abcd1234
+      - DB_NAME=logdb
+    depends_on:
+      - localhost
+
+volumes:
+  mysql_data:

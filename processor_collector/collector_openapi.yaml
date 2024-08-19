@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  title: Log Processing API
+  description: This API processes raw logs sent by clients, validates them, and forwards them to the final logging endpoint. It also includes API key authentication and IP whitelist verification.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5050
+    description: Local development server
+
+paths:
+  /verify-whitelist:
+    post:
+      summary: Verify IP and generate API key
+      description: Verifies if the client's IP is in the whitelist and generates an API key if valid.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_ip:
+                  type: string
+                  example: "192.168.1.1"
+      responses:
+        '200':
+          description: Successful verification and API key generation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collector-api-key:
+                    type: string
+                    example: "hashedapikey..."
+                  expire-time:
+                    type: string
+                    example: "2024-08-16T12:34:56.789Z"
+        '403':
+          description: IP not in whitelist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "IP not in whitelist"
+
+  /contentA:
+    post:
+      summary: Process raw log data
+      description: Validates and processes raw log data from the client, combines it with host information, and sends it to the final logging endpoint.
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                RAW_LOG:
+                  type: string
+                  example: "08:31:01  WARN|client.c:  76 client_run     # uv_run()"
+                REGEX:
+                  type: object
+                  properties:
+                    log_time_regex:
+                      type: string
+                      example: "(\\d{2}:\\d{2}:\\d{2})"
+                    level_regex:
+                      type: string
+                      example: "WARN"
+                    message_regex:
+                      type: string
+                      example: "client_run     # uv_run()"
+                    level_rule:
+                      type: object
+                      additionalProperties:
+                        type: string
+                HOST_NAME:
+                  type: string
+                  example: "myhost"
+                HOST_IP:
+                  type: string
+                  example: "192.168.1.1"
+                SYSTEM_TYPE:
+                  type: string
+                  example: "Linux"
+                PROCESS_NAME:
+                  type: string
+                  example: "logger_process"
+      responses:
+        '201':
+          description: Log processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Log processed"
+                  status:
+                    type: string
+                    example: "success"
+        '400':
+          description: Missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Client missing required fields in the request: raw_log, split_rule"
+        '401':
+          description: Unauthorized access or API key expired
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access. Please delete old key and acquire new key."
+        '402':
+          description: Invalid log level
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid log level: FATAL"
+        '403':
+          description: IP not in whitelist or permission denied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "IP Not in whitelist. Permission denied."
+        '502':
+          description: Logger unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Logger unavailable. Please restart the logger."
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal server error"
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: collector-api-key

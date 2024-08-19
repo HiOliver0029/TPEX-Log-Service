@@ -18,6 +18,14 @@ const db = mysql.createConnection({
     database: process.env.DB_DATABASE
 });
 
+// MySQL connection settings
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST || 'db', // Use 'db' as the hostname
+//     user: process.env.DB_USER || 'oliver',
+//     password: process.env.DB_PASSWORD || 'flaskpassword',
+//     database: process.env.DB_DATABASE || 'logdb'
+// });
+
 // 連接到 MySQL
 db.connect(err => {
     if (err) {

@@ -22,56 +22,63 @@ db_config = {
     'host': config.get('DEFAULT', 'host'),
     'database': config.get('DEFAULT', 'database')
 }
+# db_config = {
+#     'user': os.environ.get('DB_USER'),
+#     'password': os.environ.get('DB_PASSWORD'),
+#     'host': os.environ.get('DB_HOST'),
+#     'database': os.environ.get('DB_NAME')
+# }
+
 
 # @app.route('/', methods=['GET'])
 # def serve_index():
 #     return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/search', methods=['GET'])
-def search_logs():
-    host_name = request.args.get('host_name')
-    host_ip = request.args.get('host_ip')
-    system_type = request.args.get('system_type')
-    # level = request.args.get('level')
-    levels = request.args.getlist('level')  # 使用 getlist 取得多個值
-    log_time = request.args.get('log_time')
+# @app.route('/search', methods=['GET'])
+# def search_logs():
+#     host_name = request.args.get('host_name')
+#     host_ip = request.args.get('host_ip')
+#     system_type = request.args.get('system_type')
+#     # level = request.args.get('level')
+#     levels = request.args.getlist('level')  # 使用 getlist 取得多個值
+#     log_time = request.args.get('log_time')
 
-    query = 'SELECT * FROM log_data WHERE 1=1'
-    query_params = []
+#     query = 'SELECT * FROM log_data WHERE 1=1'
+#     query_params = []
 
-    if host_name:
-        query += ' AND HOST_NAME = %s'
-        query_params.append(host_name)
-    if host_ip:
-        query += ' AND HOST_IP = %s'
-        query_params.append(host_ip)
-    if system_type:
-        query += ' AND SYSTEM_TYPE = %s'
-        query_params.append(system_type)
-    # if level:
-    #     query += ' AND LEVEL = %s'
-    #     query_params.append(level)
-    if levels:
-        placeholders = ','.join(['%s'] * len(levels))
-        query += f' AND LEVEL IN ({placeholders})'
-        query_params.extend(levels)
-    if log_time:
-        query += ' AND LOG_TIME = %s'
-        query_params.append(log_time)
+#     if host_name:
+#         query += ' AND HOST_NAME = %s'
+#         query_params.append(host_name)
+#     if host_ip:
+#         query += ' AND HOST_IP = %s'
+#         query_params.append(host_ip)
+#     if system_type:
+#         query += ' AND SYSTEM_TYPE = %s'
+#         query_params.append(system_type)
+#     # if level:
+#     #     query += ' AND LEVEL = %s'
+#     #     query_params.append(level)
+#     if levels:
+#         placeholders = ','.join(['%s'] * len(levels))
+#         query += f' AND LEVEL IN ({placeholders})'
+#         query_params.extend(levels)
+#     if log_time:
+#         query += ' AND LOG_TIME = %s'
+#         query_params.append(log_time)
 
-    try:
-        connection = create_connection()
-        if connection:
-            cursor = connection.cursor(dictionary=True)
-            cursor.execute(query, query_params)
-            results = cursor.fetchall()
-            cursor.close()
-            connection.close()
-            return jsonify(results), 200
-        else:
-            return jsonify({'status': 'error', 'message': 'Database connection failed'}), 500
-    except Error as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+#     try:
+#         connection = create_connection()
+#         if connection:
+#             cursor = connection.cursor(dictionary=True)
+#             cursor.execute(query, query_params)
+#             results = cursor.fetchall()
+#             cursor.close()
+#             connection.close()
+#             return jsonify(results), 200
+#         else:
+#             return jsonify({'status': 'error', 'message': 'Database connection failed'}), 500
+#     except Error as e:
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 def check_legal_data(data):
