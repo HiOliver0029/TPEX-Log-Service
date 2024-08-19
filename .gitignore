@@ -5,6 +5,7 @@ express-app/.env
 # dependencies
 express-app/node_modules/
 express-app/__pycache__/
+processor_collector/__pycache__/
 
 .vscode/
 
