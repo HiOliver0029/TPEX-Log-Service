@@ -18,7 +18,7 @@ DB_DATABASE=yourdb
 #### 瀏覽
 打開瀏覽器輸入`localhost:3000`可看到查詢 log 的網頁 UI。透過輸入關鍵字進行搜尋（可複合查詢），如下圖。若未輸入任何欄位就按下Search，則預設會返回所有logs. 點擊 `Dark Mode` 可以切換為夜間模式，搜尋結果可以透過`Download Search Result`按鈕下載為 .CSV 檔案。    
 
-![前端介面](/images/express-appUI.png)
+![前端介面](/images/FrontendUI.png)
 
 ### 新增 Log 功能
 首先進入`processor_collector`資料夾。
@@ -51,10 +51,10 @@ database=yourdb
 ```python collector.py```
 Collector 負責去接收客戶打過來的初始資料，並依照客戶端提供 Regex 格式切割傳近來的 Raw Data ， 成功切割後 post 給負責將 data 寫入 data base 的 microservice。
 
-**身分驗證**
+**身分驗證**  
 進行身分驗證的流程，是先由 collector 確認連進來的 processor IP 是否在白名單中，如果是在白名單中，則會發送經過 sha256 加密後的 key 發給 processor，有效期限設為24 hr。取得key之後會儲存成json檔，之後可透過讀取該json檔去POST資料給collector，但如果collector關掉，則下次要重新將資料POST給它，就需要再進行一次身分驗證。
 
-**設定白名單**
+**設定白名單**  
 為了驗證processor的身分，需要建立`whitelist.json`來允許特定IP才能獲取API key，json設定範例如下：
 ```
 {
@@ -113,10 +113,17 @@ podman run -p 8080:8080 -e SWAGGER_JSON=/foo/openapi.yaml -v <yourYaml FilePath>
 
 ### 壓力測試
 首先透過 `pip install locust` 指令安裝 locust。
-Locust 是一個開源的負載測試工具，可以用來測試系統在高負載情況下的性能。透過 `locustfile_collector.py` 跟 `locustfile_server.py` 二個檔案，可分別對collector跟logger的api進行壓力測試。在終端中分別運行以下命令來啟動: ```locust -f locustfile_collector.py --host=http://localhost:5050``` 
+Locust 是一個開源的負載測試工具，可以用來測試系統在高負載情況下的性能。透過 `locustfile_collector.py` 跟 `locustfile_server.py` 二個檔案，可分別對collector跟logger的api進行壓力測試。  
+
+在終端中分別運行以下命令來啟動: 
+```bash
+locust -f locustfile_collector.py --host=http://localhost:5050
+```
 和 
-```locust -f locustfile_server.py --host=http://localhost:5000```
-然後打開瀏覽器並訪問 http://localhost:8089，會看到 Locust 的 Web 界面。在這裡你可以設置並啟動壓力測試。其中`locustfile_collector.py`是壓力測試的原始碼檔案名稱，`http://localhost:5050`使用目前測試 API 的 IP 跟 Port。
+```bash
+locust -f locustfile_server.py --host=http://localhost:5000
+```
+然後打開瀏覽器並訪問 `http://localhost:8089`，會看到 Locust 的 Web 界面。在這裡你可以設置並啟動壓力測試。其中`locustfile_collector.py`是壓力測試的原始碼檔案名稱，`http://localhost:5050`使用目前測試 API 的 IP 跟 Port。
 
 記得在測試前，先把collector和logger打開，並且logger要正確連接至資料庫後再開始測，IP白名單的部分要新增`127.0.0.1`。
 
@@ -126,10 +133,10 @@ Locust 是一個開源的負載測試工具，可以用來測試系統在高負�
 點擊 "Start swarming" 按鈕開始測試。
 
 #### Locust 測試報告和參數
-平均響應時間（Average response time）：顯示所有請求的平均響應時間。  
-每秒請求數（Requests per second, RPS）：顯示每秒處理的請求數量。  
-失敗數（Failures）：顯示失敗的請求數量。  
-百分位數（Percentiles）：顯示響應時間的百分位數（例如 50%，90%，95%，99%）。  
+- 平均響應時間（Average response time）：顯示所有請求的平均響應時間。  
+- 每秒請求數（Requests per second, RPS）：顯示每秒處理的請求數量。  
+- 失敗數（Failures）：顯示失敗的請求數量。  
+- 百分位數（Percentiles）：顯示響應時間的百分位數（例如 50%，90%，95%，99%）。  
 
-在Locust網站上有`Statistics`選項，會顯示當前正在測試的API跟相對應資料，如下圖所示。另有`Download Data`的選項，按下後可以看到`Download Report`，點擊後可以看見上述相關資訊的詳細報表，範例如 `https://drive.google.com/file/d/1g-wlys7SK9bj4C6vg3VgRmAiucKBfBXQ/view?usp=sharing`，包含測試結果的基本資訊及圖表。另外，在`Failures`選項中可以看到API失敗的原因，方便除錯。  
-![Locust 介面](/images/Locust)
+在Locust網站上有`Statistics`選項，會顯示當前正在測試的API跟相對應資料，如下圖所示。另有`Download Data`的選項，按下後可以看到`Download Report`，點擊後可以看見上述相關資訊的詳細報表，範例如 https://drive.google.com/file/d/1g-wlys7SK9bj4C6vg3VgRmAiucKBfBXQ/view?usp=sharing，包含測試結果的基本資訊及圖表。另外，在`Failures`選項中可以看到API失敗的原因，方便除錯。  
+![Locust 介面](/images/Locust.png)
