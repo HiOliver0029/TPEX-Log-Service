@@ -138,7 +138,8 @@ locust -f locustfile_server.py --host=http://localhost:5000
 - 失敗數（Failures）：顯示失敗的請求數量。  
 - 百分位數（Percentiles）：顯示響應時間的百分位數（例如 50%，90%，95%，99%）。  
 
-在Locust網站上有`Statistics`選項，會顯示當前正在測試的API跟相對應資料，如下圖所示。另有`Download Data`的選項，按下後可以看到`Download Report`，點擊後可以看見上述相關資訊的詳細報表，範例如 https://drive.google.com/file/d/1g-wlys7SK9bj4C6vg3VgRmAiucKBfBXQ/view?usp=sharing，包含測試結果的基本資訊及圖表。另外，在`Failures`選項中可以看到API失敗的原因，方便除錯。  
+在Locust網站上有`Statistics`選項，會顯示當前正在測試的API跟相對應資料，如下圖所示。另有`Download Data`的選項，按下後可以看到`Download Report`，點擊後可以看見上述相關資訊的詳細報表，範例如 `https://drive.google.com/file/d/1g-wlys7SK9bj4C6vg3VgRmAiucKBfBXQ/view?usp=sharing`
+，包含測試結果的基本資訊及圖表。另外，在`Failures`選項中可以看到API失敗的原因，方便除錯。  
 ![Locust 介面](/images/Locust.png)
 
 ### Collector 容器化

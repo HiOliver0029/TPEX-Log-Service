@@ -9,19 +9,19 @@ servers:
 
 paths:
   /verify-whitelist:
-    post:
+    get:
       summary: Verify IP and generate API key
       description: Verifies if the client's IP is in the whitelist and generates an API key if valid.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                client_ip:
-                  type: string
-                  example: "192.168.1.1"
+      # requestBody:
+      #   required: true
+      #   content:
+      #     application/json:
+      #       schema:
+      #         type: object
+      #         properties:
+      #           client_ip:
+      #             type: string
+      #             example: "192.168.1.1"
       responses:
         '200':
           description: Successful verification and API key generation

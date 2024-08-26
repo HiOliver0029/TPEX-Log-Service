@@ -19,7 +19,7 @@ class UserBehavior(TaskSet):
             "SYSTEM_TYPE": "TestSystem",
             "PROCESS_NAME": "TestProcess"
         }
-        response = self.client.post("/contentA", json=log_data_A, headers=self.headers)
+        response = self.client.post("/send-log", json=log_data_A, headers=self.headers)
         print(f"Send log response: {response.status_code} - {response.json()}")
 
 class WebsiteUser(HttpUser):
