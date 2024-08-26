@@ -47,7 +47,7 @@ paths:
                     type: string
                     example: "IP not in whitelist"
 
-  /contentA:
+  /send-log:
     post:
       summary: Process raw log data
       description: Validates and processes raw log data from the client, combines it with host information, and sends it to the final logging endpoint.
