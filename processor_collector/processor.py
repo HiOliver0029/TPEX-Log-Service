@@ -204,7 +204,7 @@ class LogHandler(FileSystemEventHandler):
 
     def send_to_collector(self, log_data):
         try:
-            url = 'http://localhost:5050/contentA'
+            url = 'http://localhost:5050/send-log'
             # print("KEY:", api_key)
             headers={"collector-api-key": api_key_data['collector-api-key']}
             # print(headers)

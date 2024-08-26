@@ -93,7 +93,7 @@ def validate_api_key(f):
         if not api_key or not expiration_date:
             return jsonify({"error": "Unauthorized access (Wrong key or collector restarted). Please delete old key and acquire new key."}), 401
         if datetime.now() > expiration_date:
-            return jsonify({"error": "API key expired. Please delete old key and acquire new key."}), 401
+            return jsonify({"error": "API key expired. Please delete old token and acquire new token."}), 401
         return f(*args, **kwargs)
     return decorator
 
@@ -117,7 +117,7 @@ def check_error(level):
     if level not in SUPPORTED_LEVELS:
         raise InvalidLogLevelError(f"Invalid log level: {level}")
 
-@app.route('/contentA', methods=['POST'])
+@app.route('/send-log', methods=['POST'])
 @validate_api_key
 def process_raw_log():
     try:
@@ -157,7 +157,7 @@ def process_raw_log():
         print("Log Data: ",log_data)
 
         # 傳送 log 資料至最終儲存端點
-        response = requests.post('http://localhost:5000/log', json=log_data)
+        response = requests.post('http://localhost:5000/save-log', json=log_data)
         if response.status_code == 201:
             return jsonify({"message": "Log processed", "status": "success"}), 201
         else:
@@ -181,8 +181,8 @@ def process_raw_log():
     #     return jsonify({"error": str(e)}), 500
     
     except requests.exceptions.ConnectionError:
-        print("Logger unavailable. Please restart the logger.")
-        return jsonify({"error": "Logger unavailable. Please restart the logger."}), 502
+        print("Logger or database unavailable. Please restart the logger and database.")
+        return jsonify({"error": "Logger or database unavailable. Please restart the logger and database."}), 502
 
     except Exception as e:
         print(f"Unexpected Error: {e}")

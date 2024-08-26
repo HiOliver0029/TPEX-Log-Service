@@ -124,7 +124,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Unauthorized access. Please delete old key and acquire new key."
+                    example: "Unauthorized access. Please delete old token and acquire new token."
         '402':
           description: Invalid log level
           content:
@@ -136,7 +136,7 @@ paths:
                     type: string
                     example: "Invalid log level: FATAL"
         '403':
-          description: IP not in whitelist or permission denied
+          description: IP not in whitelist
           content:
             application/json:
               schema:
@@ -146,7 +146,7 @@ paths:
                     type: string
                     example: "IP Not in whitelist. Permission denied."
         '502':
-          description: Logger unavailable
+          description: Logger or Database unavailable
           content:
             application/json:
               schema:
@@ -154,7 +154,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Logger unavailable. Please restart the logger."
+                    example: "Logger or database unavailable. Please restart the logger and database."
         '500':
           description: Internal server error
           content:

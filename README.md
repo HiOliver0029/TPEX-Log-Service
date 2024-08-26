@@ -140,3 +140,27 @@ locust -f locustfile_server.py --host=http://localhost:5000
 
 在Locust網站上有`Statistics`選項，會顯示當前正在測試的API跟相對應資料，如下圖所示。另有`Download Data`的選項，按下後可以看到`Download Report`，點擊後可以看見上述相關資訊的詳細報表，範例如 https://drive.google.com/file/d/1g-wlys7SK9bj4C6vg3VgRmAiucKBfBXQ/view?usp=sharing，包含測試結果的基本資訊及圖表。另外，在`Failures`選項中可以看到API失敗的原因，方便除錯。  
 ![Locust 介面](/images/Locust.png)
+
+### Collector 容器化
+1. Create a requirements.txt File: Ensure you have a requirements.txt file in the same directory with all the dependencies your Flask application needs.
+```makefile
+Flask==2.3.2
+requests==2.31.0
+```
+2. Build the Docker Image:  
+Navigate to the directory containing the Dockerfile and run the following command to build the Docker image:
+```bash
+podman build -t collector .
+```
+3. Run the Podman Container:  
+Once the image is built, you can run it with the following command:
+```bash
+podman run -d -p 5050:5050 collector
+```
+or
+```bash
+podman run -it -p 5050:5050 collector
+```
+This command runs the container in detached mode (-d) and maps port 5050 of the container to port 5050 on your host machine (-p 5050:5050).
+
+Access Your Application: It should be accessible at port 5050.
